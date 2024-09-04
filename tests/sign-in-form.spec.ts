@@ -19,9 +19,14 @@ test("WL-1 user registration, should be successful", async ({ page }) => {
   ).toBeVisible();
 });
 
+/*
+  This method will add one drink by name 
+  @param name: string
+*/
 async function addOneDrinkByName(name: string) {
   await page.getByLabel(`Add one ${name}`).click();
 }
+
 // клінап на юай
 test.afterEach(async ({ page }) => {});
 
