@@ -35,8 +35,19 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "coffee-cart",
       use: { ...devices["Desktop Chrome"] },
+      testDir: "tests/coffee-cart-tests",
+    },
+    {
+      name: "condulit",
+      use: { ...devices["Desktop Chrome"] },
+      testDir: "tests/condulit-tests",
+    },
+    {
+      name: "playwright-site",
+      use: { ...devices["Desktop Chrome"] },
+      testDir: "tests/pw-tests",
     },
 
     // comand + /
