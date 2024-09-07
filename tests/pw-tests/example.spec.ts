@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Locator } from "@playwright/test";
 
 test("has title", async ({ page }) => {
   const baseUrl = "https://playwright.dev/";
@@ -9,6 +9,10 @@ test("has title", async ({ page }) => {
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/Playwright/);
+
+  const banners: Array<Locator> = await page
+    .locator('//div[@class="categories-slider__image"]')
+    .all();
 
   await expect(page.locator("")).toBeFalsy();
 });

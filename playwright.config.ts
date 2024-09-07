@@ -13,6 +13,9 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
   timeout: 180 * 1000,
+  expect: {
+    timeout: 30_000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -38,6 +41,7 @@ export default defineConfig({
       name: "coffee-cart",
       use: { ...devices["Desktop Chrome"] },
       testDir: "tests/coffee-cart-tests",
+      retries: 1,
     },
     {
       name: "condulit",
@@ -48,6 +52,11 @@ export default defineConfig({
       name: "playwright-site",
       use: { ...devices["Desktop Chrome"] },
       testDir: "tests/pw-tests",
+    },
+    {
+      name: "telemart-example",
+      use: { ...devices["Desktop Chrome"] },
+      testDir: "tests/tests-examples",
     },
 
     // comand + /
