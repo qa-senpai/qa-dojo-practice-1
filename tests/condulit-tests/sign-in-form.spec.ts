@@ -1,4 +1,12 @@
-import test, { expect } from "@playwright/test";
+import test, { expect, Page } from "@playwright/test";
+import { LoginPage } from "./LoginPage";
+
+test("SignIn-12541", async ({ page }) => {
+  const loginPage = new LoginPage();
+  await page.goto("https://demo.learnwebdriverio.com/login");
+  await loginPage.login(page, "Some", "Pass");
+  console.log("test");
+});
 
 test("WL-1 user registration, should be successful", async ({ page }) => {
   const randomNumber = Math.floor(Math.random() * 9999);
@@ -24,7 +32,7 @@ test("WL-1 user registration, should be successful", async ({ page }) => {
   @param name: string
 */
 async function addOneDrinkByName(name: string) {
-  await page.getByLabel(`Add one ${name}`).click();
+  // await page.getByLabel(`Add one ${name}`).click();
 }
 
 // клінап на юай

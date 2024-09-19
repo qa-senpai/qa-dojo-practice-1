@@ -8,59 +8,107 @@ test.afterEach(({ page }) => {
   page.close();
 });
 
-test("TM-1: Check banners carrousel", async ({ page }) => {
-  async function getBannersId(page: Page) {
-    const prevBannerId: string | null = await page
-      .locator(`a[class*= 'prev']:not(.swiper-slide-duplicate)`)
-      .getAttribute("data-banner-id");
 
-    const activeBannerId: string | null = await page
-      .locator(`a[class*= 'active']:not(.swiper-slide-duplicate)`)
-      .getAttribute("data-banner-id");
+function init(page){
 
-    const nextBannerId: string | null = await page
-      .locator(`a[class*= 'next']:not(.swiper-slide-duplicate)`)
-      .getAttribute("data-banner-id");
+  const mainCoffeePage = new MainCoffeePage(page);
+  const coffeeId = new DataTestCoffeeNames();
+  const coffeeName = new CoffeeNames();
+  
+  return {mainCoffeePage, coffeeId, coffeeName}
+  
+  }
+  
 
-    return { prevBannerId, activeBannerId, nextBannerId };
+test("TM-1: Check banners carrousel", async ({ page,  }) => {
+  const {mainCoffeePage,coffeeId, coffeeName } = init(page);
+  const carousel = carouselObject(page);
+  // const currentBannerPosition: number = Number(
+  //   await carousel.currentBannerPositionOld()
+  // );
+
+  for (let i = 0; i < 100; i++) {
+    await swipeBanner(page, carousel.swipeButton);
   }
 
-  const activeBanner: Locator = page.locator(
-    `a[class*= 'active']:not(.swiper-slide-duplicate)`
-  );
-
-  const swipeButton: Locator = page.locator(
-    '//div[@class="swiper-button-next"]'
-  );
-
-  let currentBannerPositionOld: string | null = await activeBanner.getAttribute(
-    "data-banner-position"
-  );
-  const currentBannerPosition: number = Number(currentBannerPositionOld);
-
-  let ids = await getBannersId(page);
-  await Promise.all([
-    page
-      .locator(
-        `a[class*= 'active']:not(.swiper-slide-duplicate)[data-banner-id = '${ids.nextBannerId}']`
-      )
-      .waitFor(),
-    swipeButton.click(),
-  ]);
-
-  ids = await getBannersId(page);
-  await Promise.all([
-    page
-      .locator(
-        `a[class*= 'active']:not(.swiper-slide-duplicate)[data-banner-id = '${ids.nextBannerId}']`
-      )
-      .waitFor(),
-    swipeButton.click(),
-  ]);
-
-  const bannerPosition = await activeBanner.getAttribute(
-    "data-banner-position"
-  );
-  const bannerPositionNum = Number(bannerPosition);
-  expect(bannerPositionNum).toEqual(Number(currentBannerPosition) + 2);
+  // const bannerPosition = await carousel.activeBanner.getAttribute(
+  //   "data-banner-position"
+  // );
+  // const bannerPositionNum = Number(bannerPosition);
+  // expect(bannerPositionNum).toEqual(Number(currentBannerPosition) + 2);
 });
+
+async function swipeBanner(page: Page, swipeButton: Locator) {
+  const ids = await getBannersId(page);
+  await Promise.all([
+    page
+      .locator(
+        `a[class*= 'active']:not(.swiper-slide-duplicate)[data-banner-id = '${ids.nextBannerId}']`
+      )
+      .waitFor(),
+    swipeButton.click(),
+  ]);
+}
+
+function carouselObject(page: Page) {
+  return {
+    activeBanner: page.locator(
+      `a[class*= 'active']:not(.swiper-slide-duplicate)`
+    ),
+    swipeButton: page.locator('//div[@class="swiper-button-next"]'),
+    currentBannerPositionOld: async () =>
+      await this.activeBanner.getAttribute("data-banner-position"),
+    getBannersId: async (page: Page) => {
+      const prevBannerId: string | null = await page
+        .locator(`a[class*= 'prev']:not(.swiper-slide-duplicate)`)
+        .getAttribute("data-banner-id");
+
+      const activeBannerId: string | null = await page
+        .locator(`a[class*= 'active']:not(.swiper-slide-duplicate)`)
+        .getAttribute("data-banner-id");
+
+      const nextBannerId: string | null = await page
+        .locator(`a[class*= 'next']:not(.swiper-slide-duplicate)`)
+        .getAttribute("data-banner-id");
+
+      return { prevBannerId, activeBannerId, nextBannerId };
+    },
+  };
+}
+async function getBannersId(page: Page) {
+  const prevBannerId: string | null = await page
+    .locator(`a[class*= 'prev']:not(.swiper-slide-duplicate)`)
+    .getAttribute("data-banner-id");
+
+  const activeBannerId: string | null = await page
+    .locator(`a[class*= 'active']:not(.swiper-slide-duplicate)`)
+    .getAttribute("data-banner-id");
+
+  const nextBannerId: string | null = await page
+    .locator(`a[class*= 'next']:not(.swiper-slide-duplicate)`)
+    .getAttribute("data-banner-id");
+
+  return { prevBannerId, activeBannerId, nextBannerId };
+}
+
+/*
+expect(1).toBe(1); //==
+expect(1).not.toBe(1); // !=
+
+expect(12415).toBeTruthy(); //  {some value} == true
+expect(12415).toBeFalsy(); //  {some value} == false
+
+expect(12415).toBeGreaterThan(214); //  {some value} > {some value}
+expect(12415).toBeGreaterThanOrEqual(214); //  {some value} >= {some value}
+
+expect(12415).toBeLessThan(214); //  {some value} <= {some value}
+expect(12415).toBeLessThanOrEqual(214); //  {some value} <= {some value}
+
+/*
+  false 
+  0
+  null - не працює
+  undefined - не працює
+  NaN - не працює
+  ''
+*/

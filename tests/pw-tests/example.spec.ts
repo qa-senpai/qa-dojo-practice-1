@@ -27,4 +27,16 @@ test("get started link", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Installation" })
   ).toBeVisible();
+
+  expect("test").toBe("test");
+});
+
+test("get started link11", async ({ page }) => {
+  // expect("test 2145151 ").toBe("test 2145151");
+  expect("test 2145151 ").toEqual("test 2145151");
+  expect("test").toStrictEqual("test");
+
+  expect("test").toBe("test 2145151");
+  expect("test").toEqual("test");
+  expect("test").toStrictEqual("test");
 });

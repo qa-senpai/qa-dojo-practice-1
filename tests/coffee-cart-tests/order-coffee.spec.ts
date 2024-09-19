@@ -8,11 +8,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("DJ-1 - it should show promotion message", async ({ page }) => {
-  const espressoCup: Locator = page.locator('[data-test="Espresso"]');
-  const macchiatoCup: Locator = page.locator(
-    '[data-test="Espresso_Macchiato"]'
-  );
-  const cappuccinoCup: Locator = page.locator('[data-test="Cappuccino"]');
   const promoMessage: Locator = page.getByRole("button", {
     name: "Yes, of course!",
   });
@@ -20,9 +15,12 @@ test("DJ-1 - it should show promotion message", async ({ page }) => {
     name: "Nah, I'll skip.",
   });
 
-  await espressoCup.click();
-  await macchiatoCup.click();
-  await cappuccinoCup.click();
+  const beverages = ["Espresso", "Espresso_Macchiato", "Cappuccino"];
+
+  for (const beverage of beverages) {
+    await page.locator(`[data-test = '${beverage}']`).click();
+  }
+
   await expect(promoMessage).toBeVisible();
   await expect(skipPromoMessage).toBeVisible();
   await expect(page.locator("#app")).toContainText(

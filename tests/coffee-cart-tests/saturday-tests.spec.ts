@@ -25,12 +25,23 @@ test("test", async ({ page }) => {
   //TODO:
   //TODO:
   //TODO:
+  await page.getByText("Espresso ${name} $12.00espressomilk foam").click();
+  await page.getByText("Espresso Macchiato $12.00espressomilk foam").click();
+  await page.getByText("Espresso Late $12.00espressomilk foam").click();
   await page.getByText("Espresso Macchiato $12.00espressomilk foam").click();
   await expect(page.locator("[class = 'snackbar success']")).toContainText("");
 
-  //   await page
-  //     .getByText("Espresso Macchiato $12.00espressomilk foam")
-  //     .fill("test");
+  async function fillName(name: string) {
+    await page
+      .getByPlaceholder("Name")
+      .fill(name);
+  };
+
+  async function clickOnDrinkByName(name: string) {
+    await page
+      .getByTestId(name)
+      .click();
+  };
 
   //   // імітація поведінки
   //   await page
